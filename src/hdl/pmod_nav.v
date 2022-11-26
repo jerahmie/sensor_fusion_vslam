@@ -1,34 +1,47 @@
 // pmod_nav module
 //
-//      +---------------------+
-//      |                     |
-//    --| clk             *CS |--
-//    --| rst            sclk |--
-//    --| sclk_in        mosi |--
-//    ==| data           miso |--
-//    --| rw              it |--
-//      |                     |
-//      +---------------------+
+// A module to provide an FPGA interface to the Digilent PMOD NAV
+// https://digilent.com/reference/pmod/pmodnav/reference-manual
 //
-//      INPUT
-//      clk: module clock
-//      rst: module reset
-//  SCLK_IN: SPI CLK IN
-//     DATA: DATA I/O (8-bit)
-//      R/W: module buffer read/write
+// 9-axis accelerometer + gyroscope + magnetometer LSM9DS1 
+// https://www.st.com/resource/en/datasheet/lsm9ds1.pdf
 //
-//      OUTPUT
-//      *CS: chip select
-//     SCLK: SPI clok out
-//     MOSI: Main out, Subnode in
-//     MISO: Main in, Subnode out
-//      IT: CPU interrupt
+// MEMS pressure sensor LPS25HB
+// https://www.st.com/resource/en/datasheet/lps25hb.pdf
+//
+//
+//      +-------------------------+
+//      |                         |
+//   -->| clk              cs_ag  |-->
+//   -->| rst            sdi/mosi |-->
+//   -->| spc            sdo/miso |<--
+//   <=>| data                spc |-->
+//   -->| rw                  int |<--
+//      |                  drdy_m |<--
+//      |                    cs_m |-->
+//      |                  cs_alt |-->
+//      |                         |
+//      +-------------------------+
+//
+//         clk: module clock
+//         rst: module reset
+//        data: DATA I/O (16-bit)
+//         R/W: module buffer read/write
+//
+//       cs_ag: chip select
+//    sdi/mosi: serial data in
+//    sdo/miso: serial data out
+//         spc: SPI clock
+//         int: interrupt for all components
+//      drdy_m: data ready, magnetometer
+//        cs_m: chip select for the magnetometer
+//
 
 module pmod_nav(
   input wire clk,
   input wire rst,
   input wire sclk_in,
-  input wire [7:0] data,
+  inout wire [15:0] data,
   input wire rw,
   output reg cs,
   output reg sclk,
