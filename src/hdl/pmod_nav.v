@@ -13,7 +13,7 @@
 //      +-------------------------+
 //      |                         |
 //   -->| clk              cs_ag  |-->
-//   -->| rst            sdi/mosi |-->
+//   -->| reset          sdi/mosi |-->
 //   -->| spc            sdo/miso |<--
 //   <=>| data                spc |-->
 //   -->| rw                  int |<--
@@ -24,7 +24,7 @@
 //      +-------------------------+
 //
 //         clk: module clock
-//         rst: module reset
+//       reset: module reset
 //        data: DATA I/O (16-bit)
 //          rw: module buffer read/write
 //
@@ -41,7 +41,7 @@
 // implementing a full duplex SPI state machine. 
 module pmod_nav(
   input wire clk,
-  input wire rst,
+  input wire reset,
   inout wire [15:0] data,
   input wire rw,
   output reg cs_ag,
@@ -56,7 +56,7 @@ module pmod_nav(
  
   // internal storage buffers
   reg [15:0] input_buffer;
-  reg [15:0] outpu_buffer;
+  reg [15:0] output_buffer;
 
   always @(posedge clk) begin
     cs_ag <= 0;
