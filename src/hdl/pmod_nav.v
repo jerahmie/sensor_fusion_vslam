@@ -26,31 +26,43 @@
 //         clk: module clock
 //         rst: module reset
 //        data: DATA I/O (16-bit)
-//         R/W: module buffer read/write
+//          rw: module buffer read/write
 //
 //       cs_ag: chip select
 //    sdi/mosi: serial data in
 //    sdo/miso: serial data out
 //         spc: SPI clock
-//         int: interrupt for all components
+//          it: interrupt for all components
 //      drdy_m: data ready, magnetometer
-//        cs_m: chip select for the magnetometer
-//
-
+//        cs_m: chip select, magnetometer
+//        cs_alt: chip select, altimeter
+// 
+// The pmod_nav interface module reads data from the PMOD NAV module by 
+// implementing a full duplex SPI state machine. 
 module pmod_nav(
   input wire clk,
   input wire rst,
-  input wire sclk_in,
   inout wire [15:0] data,
   input wire rw,
-  output reg cs,
-  output reg sclk,
-  output reg mosi,
-  output reg miso,
-  output reg it
+  output reg cs_ag,
+  input wire sdi,
+  output reg sdo,
+  output reg spc,
+  input wire it,
+  input wire drdy_m,
+  output reg cs_m,
+  output reg cs_alt
   );
-  
+ 
+  // internal storage buffers
+  reg [15:0] input_buffer;
+  reg [15:0] outpu_buffer;
+
   always @(posedge clk) begin
-    
+    cs_ag <= 0;
+    sdo <= 0;
+    spc <= 0;
+    cs_m <= 0;
+    cs_alt <= 0;
   end //clk
 endmodule
