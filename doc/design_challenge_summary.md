@@ -39,12 +39,51 @@ that looks outward from the SP701 evaluation board.  The PMOD NAV IMU module
 will be attached to the PMOD1 port on the SP701.  A 3D printed case will 
 satisfy all the requirements to simultaneously position the camera as well as 
 handles to hold the asseembly while testing the VSLAM platform.  Since I don't
-(yet) have a 3D printer, the printed case structure will be completed at a later
-date.
+have a 3D printer at the time of this writing, the printed case structure will 
+be completed at a later date.
 
 ## Logic Design, IP Layout, and Custom Logic Overview
 
+At the top level, this is a microcontroller-based system with supporting digital 
+logic to interface with the PCAM 5C and the PMOD NAV IMU peripherals.  The system state,
+the VLAM algorithms, as well as all external communications will be controlled by the,
+soft microcontroller. A combination of Xilinx IP as well as custom logic collect,
+filter, and process raw sensor module data to minimize the amount of work required of 
+the microcontroller. 
+
+The SP701 has ample resources to implement a soft CPU core with required subsystems.
+I initially wanted to use an Arm Cortex M1 or M4 soft microcontroller as the basis for 
+this project since I have more experience using Arm architecture.  The Arm Cortex 
+M1 and M4 IP is available free of charge through Arm DesignStart FPGA program with access
+provided directly by Arm.  While my early impressions of using the Arm core were promising,
+I ultimately decided to use a Xilinx MicroBlaze Soft Processor core. While this was my 
+was my fist experience using a MicroBlaze core, I was able to get up and running
+up and running quickly thanks to a wide selection of documentation and examples provied 
+by Xilinx. 
+
+Since the PMOD 5C camera implements the MIPI CSI-2 standard, I was able to leverage Xilinx
+IP to capture and process image data.  MIPI CSI-2 IP module consists of a MIPI PHY module 
+and ...
+
+A custom logic block to perform the visual odometry is still under development.  
+The is a custom Verilog block that will take the processed video stream from the MIPI
+CSI-2 as input and the output is an estimated distance (dx, dy).
+
+The final custom logic block is the PMOD NAV IMU module.  This is another Verilog module
+that implements the SPI interface to provide orientation data for the sensor fusion algorithm.
+Digilent provides an IP module for the PMOD NAV IMU, however, the documentation states that
+it is for pre-Vitis versions of Vivado.  I had concerns that I would not be able to use 
+the IP as-is, and since the module supports a straight-forward SPI interface, I felt 
+comfortable creating my own implementation.
+
+My perference for RTL development is to use open source tools whenever possible.
+I use Icarus Verilog for module and testbench development.  I then import the 
+custom RTL components into the hardware design.  After the Verilog components
+are finalized, the Verilog hardware can be exported to Vitis for software
+development.
+
 ## Software Overview
+
 
 ## Conclusions, Comments, and Next Steps
 
