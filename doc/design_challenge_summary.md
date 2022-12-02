@@ -83,7 +83,21 @@ are finalized, the Verilog hardware can be exported to Vitis for software
 development.
 
 ## Software Overview
+In the Xilinx ecosystem, the hardware design from the previous section is exported to the 
+Vitis IDE.  Vitis is a relatively new replacement for the Xilinx ISE software IDE, but 
+fortunately Xilinx provides an excellent tutorial to implement a MicroBlaze core on the 
+SP701 evaluation board (https://xilinx.github.io/Embedded-Design-Tutorials/docs/2021.2/build/html/docs/Feature_Tutorials/microblaze-system/README.html).
+I decided to take a detour from my design to complete this tutorial since this is my fist 
+experience implementing a full MicroBlaze system and using Vitis. 
+
+Right now the software components of this project are in the "Hello World" phase. It can quite
+literally print "Hello World" over the UART serial connection.  When considering all the 
+components that must be in place for this to work, it is actually quite motivating to tackle 
+future algorithm implementation that will be the heart of the VSLAM platform. My next step will 
+be to replace "Hello World" with integration tests to ensure my custom RTL blocks perform as expected
+in the FPGA implementation.  
 
 
 ## Conclusions, Comments, and Next Steps
-
+I had a lot of fun participating in the Experimenting with Sensor Fusion Design Challenge from 
+Element14 and AMD/Xilinx.  
